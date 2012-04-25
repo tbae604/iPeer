@@ -1,7 +1,7 @@
 <!-- elements::ajax_rubric_preview start -->
     <table width="95%" border="0" align="center" cellpadding="4" cellspacing="2">
       <tr class="tableheader" align="center">
-      <td valign="top" width="75%" align='left'>Section One: &nbsp;Lickert Scales</td>
+      <td valign="top" width="75%" align='left'>Section One: &nbsp;Likert Scales</td>
     <?php
     $descriptor_des = array('1'=>'Lowest','2'=>'','3'=>'Middle','4'=>'','5'=>'Highest');
 
