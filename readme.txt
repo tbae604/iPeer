@@ -1,4 +1,10 @@
-iPeer 2.3
+iPeer 2.3.1
+
+Changelog from 2.3.0
+1) Fixed a bug on calculating the average for simple evalua    tion when self evaluation is turned on
+2) Added gitignore and added version number in core.php
+3) Improved the export helper, reduced large number of queries issued when exporting
+4) Adjusted the format of export file so that it's easier to read
 
 Changelog from 2.2.2.1
 1) Removed PHP closing brackets that may causing issue (the blank page when submitting evaluation)
