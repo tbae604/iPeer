@@ -21,11 +21,19 @@ class EvaluationSubmission extends AppModel
 
 	function getSubmittersByEventId($eventId=null) {
         $submitters = $this->generateList('event_id='.$eventId, 'submitter_id ASC', null, '{n}.EvaluationSubmission.submitter_id', '{n}.EvaluationSubmission.submitter_id');
+        if ($submitters == null) {
+            $submitters = array();
+        }
+
         return array_keys($submitters);
 	}
 
 	function getSubmittersByGroupEventId($groupEventId=null) {
         $submitters = $this->generateList('grp_event_id='.$groupEventId, 'submitter_id ASC', null, '{n}.EvaluationSubmission.submitter_id', '{n}.EvaluationSubmission.submitter_id');
+        if ($submitters == null) {
+            $submitters = array();
+        }
+
         return array_keys($submitters);
 	}
 
