@@ -599,6 +599,9 @@ class Course extends AppModel
         case Course::FILTER_PERMISSION_FACULTY:
             $departmentIds = $this->Department->getIdsByUserId($userId);
             $courses = $this->getByDepartmentIds($departmentIds, $type, $options);
+            // !!! added two lines below
+            $options = array_merge(array('contain' => array(), 'conditions' => array()), $options);
+            $courses = array_merge($courses, $this->getCourseByInstructor($userId, $type, $options['contain'], $options['conditions']));
             break;
         case Course::FILTER_PERMISSION_OWNER:
             $options = array_merge(array('contain' => array(), 'conditions' => array()), $options);

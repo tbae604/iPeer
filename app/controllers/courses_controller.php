@@ -81,8 +81,19 @@ class CoursesController extends AppController
             $extraFilters = '';
         // faculty admins
         } else if (User::hasPermission('controllers/departments')) {
-            $courseList = User::getMyDepartmentsCourseList('list');
-            $extraFilters = array('Course.id' => array_keys($courseList));
+            // !!! includes both assigned fac and courses taught (any fac)
+
+//            debug(Set::extract('/Course/id', $this->Course->find('all'))); // [0] => id
+            $adminList = User::getMyDepartmentsCourseList('list');
+//            debug($adminList); // [1] => MECH...
+            $adminKeys = array_keys($adminList);
+//            debug($adminKeys);
+            $instrList = $this->Course->getCourseByInstructor($this->Auth->user('id'));
+            $instrKeys = (Set::extract('/Course/id', $instrList));
+//            debug($instrKeys);
+            $extraFilters = array('Course.id' => array_merge($adminKeys, $instrKeys));
+//            debug($extraFilters);
+
         // instructors
         } else {
             $extraFilters = array('Instructor.id' => $this->Auth->user('id'));
