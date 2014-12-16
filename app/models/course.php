@@ -598,7 +598,19 @@ class Course extends AppModel
             break;
         case Course::FILTER_PERMISSION_FACULTY:
             $departmentIds = $this->Department->getIdsByUserId($userId);
-            $courses = $this->getByDepartmentIds($departmentIds, $type, $options);
+            $adminCourses = $this->getByDepartmentIds($departmentIds, $type, $options);
+            $adminCoursesIds = array();
+            for ($i = 0; $i < sizeof($adminCourses); $i++) {
+                array_push($adminCoursesIds, $adminCourses[$i]['Course']['id']);
+            }
+            $options = array_merge(array('contain' => array(), 'conditions' => array()), $options);
+            $instCourses = $this->getCourseByInstructor($userId, $type, $options['contain'], $options['conditions']);
+            for ($i = 0; $i < sizeof($instCourses); $i++) { // to remove duplicate courses
+                if (in_array($instCourses[$i]['Course']['id'], $adminCoursesIds)) {
+                    unset ($instCourses[$i]);
+                }
+            }
+            $courses = array_merge($adminCourses, $instCourses);
             break;
         case Course::FILTER_PERMISSION_OWNER:
             $options = array_merge(array('contain' => array(), 'conditions' => array()), $options);
