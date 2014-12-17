@@ -600,17 +600,24 @@ class Course extends AppModel
             $departmentIds = $this->Department->getIdsByUserId($userId);
             $adminCourses = $this->getByDepartmentIds($departmentIds, $type, $options);
             $adminCoursesIds = array();
-            for ($i = 0; $i < sizeof($adminCourses); $i++) {
-                array_push($adminCoursesIds, $adminCourses[$i]['Course']['id']);
+            for ($i = 0; $i < count($adminCourses); $i++) {
+                if(isset($adminCourses[$i])) { // to stop undefined offsets
+                    $adminCoursesIds[] = $adminCourses[$i]['Course']['id'];
+                }
             }
             $options = array_merge(array('contain' => array(), 'conditions' => array()), $options);
             $instCourses = $this->getCourseByInstructor($userId, $type, $options['contain'], $options['conditions']);
-            for ($i = 0; $i < sizeof($instCourses); $i++) { // to remove duplicate courses
-                if (in_array($instCourses[$i]['Course']['id'], $adminCoursesIds)) {
+            for ($i = 0; $i < count($instCourses); $i++) { // to remove duplicate courses
+                if (isset($instCourses[$i]) && in_array($instCourses[$i]['Course']['id'], $adminCoursesIds)) {  // to stop undefined offsets
                     unset ($instCourses[$i]);
                 }
             }
-            $courses = array_merge($adminCourses, $instCourses);
+            if (!empty($instCourses)) {
+                $courses = array_merge($adminCourses, $instCourses);
+            }
+            else {
+                $courses = $adminCourses;
+            }
             break;
         case Course::FILTER_PERMISSION_OWNER:
             $options = array_merge(array('contain' => array(), 'conditions' => array()), $options);
