@@ -80,10 +80,10 @@ class CourseTestCase extends CakeTestCase {
 
         // test courses admin'd (Fac of AppSci) or taught by admin3
         $course = $this->Course->getAllAccessibleCourses(39, 1);
-        $this->assertEqual($course[0]['Course']['course'], "APSC 201"); //admin'd sorted alphabetically
+        $this->assertEqual($course[0]['Course']['course'], "APSC 201"); //all sorted alphabetically
         $this->assertEqual($course[1]['Course']['course'], "CPSC 101");
-        $this->assertEqual($course[2]['Course']['course'], "MECH 328");
-        $this->assertEqual($course[3]['Course']['course'], "CPSC 404"); //followed by taught course
+        $this->assertEqual($course[2]['Course']['course'], "CPSC 404");
+        $this->assertEqual($course[3]['Course']['course'], "MECH 328");
         $this->assertEqual(sizeof($course), 4);
 
         // test courses admin'd (Fac of AppSci) or taught by admin4 - both admin and teach APSC 201

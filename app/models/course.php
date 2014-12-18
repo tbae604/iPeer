@@ -614,6 +614,12 @@ class Course extends AppModel
             }
             if (!empty($instCourses)) {
                 $courses = array_merge($adminCourses, $instCourses);
+                // sort courses alphabetically
+                $names = array();
+                foreach ($courses as $key => $row) {
+                    $names[$key] = $row['Course']['course'];
+                }
+                array_multisort($names, SORT_ASC, $courses);
             }
             else {
                 $courses = $adminCourses;
