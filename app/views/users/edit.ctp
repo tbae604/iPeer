@@ -48,7 +48,8 @@ echo $this->Form->input('student_no', array('label' => 'Student Number'));
 						else {
 							$checked = "";
 						}
-						echo $this->Form->checkbox('Courses.id', array('value' => $key, 'hiddenField' => false, 'checked' => $checked, 'style' => 'width: 12px;', 'id' => 'course_'.$key));
+						echo $this->Form->input('Courses.id', array('default' => $roleDefault, 'options' => $roleOptions, 'id' => 'course_'.$key));
+						/* echo $this->Form->checkbox('Courses.id', array('value' => $key, 'hiddenField' => false, 'checked' => $checked, 'style' => 'width: 12px;', 'id' => 'course_'.$key)); */
 						?>
 						</td>
 						<td style="text-align: left;"><?php echo $this->Form->label('Courses.id', $row, array('style' => 'width: 100%; float: none', 'for' => 'course_'.$key));
