@@ -426,13 +426,13 @@ class UsersController extends AppController
         // set the courses that this user is already in
         $coursesId = array();
         foreach ($user['Course'] as $course) {
-            $coursesId[] = $course['id'];
+            $coursesId[$course['id']] = 3; // insructor = 3
         }
         foreach ($user['Enrolment'] as $course) {
-            $coursesId[] = $course['id'];
+            $coursesId[$course['id']] = 5; // student = 5
         }
         foreach ($user['Tutor'] as $course) {
-            $coursesId[] = $course['id'];
+            $coursesId[$course['id']] = 4; // tutor = 4
         }
         $this->set('coursesSelected', $coursesId);
     }
@@ -450,6 +450,8 @@ class UsersController extends AppController
         asort($coursesOptions);
         $this->set('coursesOptions', $coursesOptions);
 
+        $this->set('courseLevelRoles', array( 0 => 'none', 3 => 'instructor', 4 => 'tutor', 5 => 'student'));
+        
         $this->set('roleOptions', $this->AccessControl->getEditableRoles());
         $this->set('faculties', $this->User->Faculty->find('list',
             array('order' => 'Faculty.name ASC')));

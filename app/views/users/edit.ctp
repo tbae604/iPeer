@@ -27,7 +27,7 @@ echo $this->Form->input('title');
 echo $this->Form->input('student_no', array('label' => 'Student Number'));
 ?>
 	<div class="input text">
-		<label>Put User in Course</label>
+		<label>Course Enrollment</label>
 		<div style="width: 35em; display: inline-block; border: 1px solid #999; padding: 5px; border-radius: 3px; margin: 0.35em 0.35em;">
 			<table id="courseTable">
 				<thead>
@@ -38,17 +38,18 @@ echo $this->Form->input('student_no', array('label' => 'Student Number'));
 				</thead>
 				<tbody>
 					<?php
+
 					foreach ($coursesOptions as $key=>$row) {
+                        
+                        $courseRole = 0; // default is none
+                        if(isset($coursesSelected[$key])) {
+                            $courseRole = $coursesSelected[$key];
+                        }
+                        
 						?>
 					<tr>
 						<td style="text-align: center;"><?php 
-						if (in_array($key, $coursesSelected)) {
-							$checked = "checked";
-						}
-						else {
-							$checked = "";
-						}
-						echo $this->Form->input('Courses.id', array('default' => $roleDefault, 'options' => $roleOptions, 'id' => 'course_'.$key));
+						echo $this->Form->input('Courses.'.$key, array('default' => $courseRole, 'options' => $courseLevelRoles, 'id' => 'course_'.$key , 'class' => 'role-select', 'label' => false));
 						/* echo $this->Form->checkbox('Courses.id', array('value' => $key, 'hiddenField' => false, 'checked' => $checked, 'style' => 'width: 12px;', 'id' => 'course_'.$key)); */
 						?>
 						</td>
@@ -89,8 +90,7 @@ echo $ajax->observeField(
 if (User::hasPermission('functions/user/admin')) {
     echo "
 <script type='text/javascript'>
-// If the user is supposed to be a student, disable adding as an
-// instructor. Any other role, disable adding as a student.
+// enable or disable faculty menu as appropriate
 jQuery('#RoleRolesUserRoleId').change(function() {
     var str = jQuery('#RoleRolesUserRoleId option:selected').text();
     if (str == 'admin' || str == 'instructor') {
@@ -107,33 +107,16 @@ jQuery('#RoleRolesUserRoleId').change();
 ?>
 
 <script>
-	function selectCourse(id) {
-		if (jQuery("#CoursesEnrollment").val().indexOf("|" + id + "|") >= 0) {
-			jQuery("#CoursesEnrollment").val(jQuery("#CoursesEnrollment").val().replace("|" + id + "|", ""));
-		}
-		else {
-			jQuery("#CoursesEnrollment").val(jQuery("#CoursesEnrollment").val() + "|" + id + "|");
-		}
-	}
-
 	/* Create an array with the values of all the checkboxes in a column */
 	jQuery.fn.dataTableExt.afnSortData['dom-checkbox'] = function(oSettings, iColumn) {
 	    var aData = [];
-	    jQuery('td:eq(' + iColumn + ') input', oSettings.oApi._fnGetTrNodes(oSettings)).each(function() {
-	        aData.push(this.checked == false ? "1" : "0");
+	    jQuery('.role-select', oSettings.oApi._fnGetTrNodes(oSettings)).each(function() {
+	        aData.push(jQuery(this).val());
 	    });
 	    return aData;
 	}
 	
 	jQuery(document).ready(function() {
-
-		jQuery("#courseTable input[type='checkbox'][checked='checked']").each(function(){
-			selectCourse(this.value);
-		});
-
-		jQuery("#courseTable input[type='checkbox']").click(function(){
-			selectCourse(this.value);
-		});
 		
 		jQuery('#courseTable').dataTable({
 			"sPaginationType" : "full_numbers",
