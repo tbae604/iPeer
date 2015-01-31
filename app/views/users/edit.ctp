@@ -11,13 +11,14 @@ echo "<div id='usernameErr' class='red'></div>";
 echo $this->Form->input('first_name');
 echo $this->Form->input('last_name');
 echo $this->Form->input('email');
-echo '<p class="upgradenote message good-message green hide">Since the user will be an instructor in at least one course, their primary role should be upgraded:</p>';
+echo '<p class="upgradenote message good-message green hide">The user\'s primary role will be upgraded:</p>';
 echo $this->Form->input(
   'Role.RolesUser.role_id',
   array(
     'default' => $roleDefault,
     'label' => 'Primary Role',
     'options' => $roleOptions,
+    'after' => 'If the user is an instructor below, their primary role should match.'
   )
 );
 if (User::hasPermission('functions/user/admin', 'update')) {
