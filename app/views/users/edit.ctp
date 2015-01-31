@@ -11,11 +11,12 @@ echo "<div id='usernameErr' class='red'></div>";
 echo $this->Form->input('first_name');
 echo $this->Form->input('last_name');
 echo $this->Form->input('email');
+echo '<p class="upgradenote message good-message green hide">Since the user will be an instructor in at least one course, their primary role should be upgraded:</p>';
 echo $this->Form->input(
   'Role.RolesUser.role_id',
   array(
     'default' => $roleDefault,
-    'label' => 'Role',
+    'label' => 'Primary Role',
     'options' => $roleOptions,
   )
 );
@@ -49,7 +50,7 @@ echo $this->Form->input('student_no', array('label' => 'Student Number'));
 						?>
 					<tr>
 						<td style="text-align: center;"><?php 
-						echo $this->Form->input('Courses.'.$key, array('default' => $courseRole, 'options' => $courseLevelRoles, 'id' => 'course_'.$key , 'class' => 'role-select', 'label' => false));
+						echo $this->Form->input('CourseEnroll.'.$key, array('default' => $courseRole, 'options' => $courseLevelRoles, 'id' => 'course_'.$key , 'class' => 'role-select', 'label' => false));
 						/* echo $this->Form->checkbox('Courses.id', array('value' => $key, 'hiddenField' => false, 'checked' => $checked, 'style' => 'width: 12px;', 'id' => 'course_'.$key)); */
 						?>
 						</td>
@@ -100,6 +101,14 @@ jQuery('#RoleRolesUserRoleId').change(function() {
         jQuery('#FacultyFaculty').attr('disabled', 'disabled');
     }
 });
+
+jQuery('.role-select').change(function () {
+    if(jQuery(this).val()==3 && jQuery('#RoleRolesUserRoleId').val()>3) {
+        jQuery('#RoleRolesUserRoleId').val(3).change();
+        jQuery('.upgradenote').show();
+    }
+});
+
 // run once on initial page load
 jQuery('#RoleRolesUserRoleId').change();
 </script>";
@@ -117,7 +126,6 @@ jQuery('#RoleRolesUserRoleId').change();
 	}
 	
 	jQuery(document).ready(function() {
-		
 		jQuery('#courseTable').dataTable({
 			"sPaginationType" : "full_numbers",
 	        "aoColumnDefs" : [
