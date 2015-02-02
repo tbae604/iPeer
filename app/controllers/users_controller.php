@@ -781,8 +781,8 @@ class UsersController extends AppController
                                       $this->_convertCourseEnrolment($newStudentCourses,5)
                                      );
             
-            // upgrade to instructor
-            if(!empty($newInstructorCourses)) {
+            // upgrade to instructor, but don't downgrade 
+            if(!empty($newInstructorCourses) && $this->data['Role']['RolesUser']['role_id'] > 3) {
                 $this->data['Role']['RolesUser']['role_id'] = 3;
             }
             
