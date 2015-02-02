@@ -717,24 +717,17 @@ class UsersController extends AppController
         // save the data which involves:
         if ($this->data) {
             $this->data['User'] = array_map('trim', $this->data['User']);
-            
-            $submittedCourseIds = array();
-            if (is_array($this->data['CourseEnroll'])) {
-                $submittedCourseIds = array_keys($this->data['CourseEnroll']);
-            }
 
             // add list of courses the user is enrolled in but the logged
             // in user does not have access to so that the user would not
             // be unenrolled from the course when their profile is edited.
-            $append = $this->_notUnenrolCourses($this->Auth->user('id'), $userId);
-
-            $allCourseIds = array_merge($submittedCourseIds, $append);
+            $hiddenCourses = $this->_notUnenrolCourses($this->Auth->user('id'), $userId);
             
             // REMOVE OLD STUDENT STATUSES
             // unenrol student from course, group, surveygroup
             // only students will go in because only they have records in Enrolment
             foreach ($enrolCourses as $course) {
-                if (!in_array($course, $allCourseIds) || $this->data['CourseEnroll'][$course] != 5) {
+                if (!in_array($course, $hiddenCourses) && $this->data['CourseEnroll'][$course] != 5) {
                     $this->User->removeStudent($userId, $course);
                 }
             }
@@ -742,7 +735,7 @@ class UsersController extends AppController
             // REMOVE OLD TUTOR STATUSES
             // unenrol tutor from course, group
             foreach ($tutorCourses as $course) {
-                if (!in_array($course, $allCourseIds) || $this->data['CourseEnroll'][$course] != 4) {
+                if (!in_array($course, $hiddenCourses) && $this->data['CourseEnroll'][$course] != 4) {
                     $this->User->removeTutor($userId, $course);
                 }
             }
@@ -750,7 +743,7 @@ class UsersController extends AppController
             // REMOVE OLD INSTRUCTOR STATUSES
             // unenrol instructor from course
             foreach ($instructors as $course) {
-                if (!in_array($course, $allCourseIds) || $this->data['CourseEnroll'][$course] != 3) {
+                if (!in_array($course, $hiddenCourses) && $this->data['CourseEnroll'][$course] != 3) {
                     $this->User->removeInstructor($userId, $course);
                 }
             }
@@ -779,8 +772,9 @@ class UsersController extends AppController
                 }
             }
             
-            unset($this->data['CourseEnroll']); //unset this
+            unset($this->data['CourseEnroll']); //unset to avoid confusing CakePHP model insertion
 
+            // combine the query data
             $this->data = array_merge($this->data, 
                                       $this->_convertCourseEnrolment($newInstructorCourses,3),
                                       $this->_convertCourseEnrolment($newTutorCourses,4),
