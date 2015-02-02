@@ -1359,6 +1359,18 @@ class User extends AppModel
         $aco = strtolower($aco);
         App::import('Component', 'Session');
         $Session = new SessionComponent();
+
+        // Combo condition for navigation: user has permission to view evaltools
+        // OR user is instructor in at least one course
+        if ($aco == 'controllers/evaltools') {
+            // !!! MAYBE NOT HERE; THINK ABOUT IT
+
+            if (!($permission = $Session->read('ipeerSession.Permissions'))) {
+                return false;
+            }
+        }
+
+
         if (!($permission = $Session->read('ipeerSession.Permissions'))) {
             return false;
         }

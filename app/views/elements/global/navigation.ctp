@@ -39,6 +39,9 @@ if (User::isLoggedIn()) {
     }
 
     //Evaluation Tools Tab
+    // Combo condition: user has permission to view evaltools
+    // OR user is instructor in at least one course
+    $userId = User::get('id');  //this is ok
     if (User::hasPermission('controllers/evaltools')) {
         generateTab($this, 'evaltools',
             array(
@@ -47,7 +50,15 @@ if (User::isLoggedIn()) {
             ),
             'Evaluation'
         );
+
+
+//        $courses = User::getInstructorCourses($userId);  // DOES NOT WORK
+//        $courses = $this->User->getInstructorCourses($userId); // DOES NOT WORK in .ctp file; $this is not object
+//        printf($courses);
     }
+
+
+
 
     // Advanced Search Tab
     /*if (User::hasPermission('controllers/searchs')) {
