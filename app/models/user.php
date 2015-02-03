@@ -746,9 +746,10 @@ class User extends AppModel
         $Session = new SessionComponent();
         $Session->write('ipeerSession.Roles', $roles);
 
-        // set to true if e.g. student is an instructor in at least one course
+        // set to true if e.g. user is an instructor/student in at least one course
         $Session->write('ipeerSession.IsInstructor', sizeof($this->getInstructorCourses($id)) > 0);
-
+        $Session->write('ipeerSession.IsStudent', sizeof($this->getEnrolledCourses($id)) > 0);
+        
         return $roles;
     }
 
@@ -1394,6 +1395,26 @@ class User extends AppModel
         App::import('Component', 'Session');
         $Session = new SessionComponent();
         $permission = $Session->read('ipeerSession.IsInstructor');
+
+        if (!(isset($permission))) {
+            return false;
+        }
+
+        return ($permission == true);
+    }
+    
+    /**
+     * isStudent returns true if user is a student in at least once course
+     *
+     * @static
+     * @access public
+     * @return void
+     */
+    static function isStudent()
+    {
+        App::import('Component', 'Session');
+        $Session = new SessionComponent();
+        $permission = $Session->read('ipeerSession.IsStudent');
 
         if (!(isset($permission))) {
             return false;
