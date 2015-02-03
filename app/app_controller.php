@@ -115,18 +115,9 @@ class AppController extends Controller
         $trackingId = $this->SysParameter->findByParameterCode('google_analytics.tracking_id');
         $domain = $this->SysParameter->findByParameterCode('google_analytics.domain');
         $customLogo = $this->SysParameter->findByParameterCode('banner.custom_logo');
-        // evaluation tab shows for system instructors OR if they are instructor in at least one course
-        $showInstructorTab = false;
-        if (!User::hasPermission('controllers/evaltools')) {
-            $userId = User::get('id');
-            if (sizeof($this->User->getInstructorCourses($userId)) > 0) {
-                $showInstructorTab = true;
-            }
-        }
         $this->set('trackingId', $trackingId);
         $this->set('domain', $domain);
         $this->set('customLogo', $customLogo);
-        $this->set('showInstructorTab', $showInstructorTab);
 
         parent::beforeFilter();
     }

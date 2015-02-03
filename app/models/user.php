@@ -746,6 +746,9 @@ class User extends AppModel
         $Session = new SessionComponent();
         $Session->write('ipeerSession.Roles', $roles);
 
+        // set to true if e.g. student is an instructor in at least one course
+        $Session->write('ipeerSession.IsInstructor', sizeof($this->getInstructorCourses($id)) > 0);
+
         return $roles;
     }
 
@@ -1377,6 +1380,28 @@ class User extends AppModel
         // check action
         return in_array($action, $permission[$aco]);
     }
+
+
+    /**
+     * isInstructor returns true if user is teaching at least once course
+     *
+     * @static
+     * @access public
+     * @return void
+     */
+    static function isInstructor()
+    {
+        App::import('Component', 'Session');
+        $Session = new SessionComponent();
+        $permission = $Session->read('ipeerSession.IsInstructor');
+
+        if (!(isset($permission))) {
+            return false;
+        }
+
+        return ($permission == true);
+    }
+
 
     /**
      * getCourseFilterPermission return the permissions need by filtering the course
