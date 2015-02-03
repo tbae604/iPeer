@@ -40,11 +40,13 @@ class HomeController extends AppController
      */
     function index()
     {
-        if (User::hasPermission('functions/coursemanager')) {
+        if (User::hasPermission('functions/coursemanager') || User::isInstructor()) {
             // Admins and profs
             $course_list = $this->Course->getAllAccessibleCourses(User::get('id'), User::getCourseFilterPermission(), 'all', array('contain' => array('Event', 'Instructor')));
             $this->set('course_list', $this->_formatCourseList($course_list));
-            return;
+            if(!User::isStudent()) {
+                return;
+            }
         }
 
         // Student and tutor
@@ -104,7 +106,13 @@ class HomeController extends AppController
         $this->set('surveys', $surveys);
         $this->set('numOverdue', $numOverdue);
         $this->set('numDue', $numDue);
-        $this->render('studentIndex');
+        
+        if(!User::isInstructor()) {
+            $this->render('studentIndex');
+        } else {
+            $this->set('title_for_layout', __('Instructor View', true));
+            $this->render('combined');
+        }
     }
 
     /**
