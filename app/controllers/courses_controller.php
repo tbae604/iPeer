@@ -249,8 +249,12 @@ class CoursesController extends AppController
         $currentProf = Set::combine($currentProf, '{n}.User.id', '{n}.User.full_name');
         $instructorList = $currentProf + array_diff($instructorList, $currentProf);
 
-        // set the list of instructors/tutors
         $tutorList = $this->User->getTutors();
+        // since there could be users who are tutors in this course, but are not system wide tutors
+        $existingTutors = Set::combine($this->User->getTutorsByCourse($courseId), '{n}.User.id', '{n}.User.full_name');
+        $tutorList = $existingTutors + $tutorList;
+
+        // set the list of instructors/tutors
         $this->set('instructors', $instructorList);
         $this->set('tutors', $tutorList);
     }
