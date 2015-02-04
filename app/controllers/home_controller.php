@@ -44,7 +44,7 @@ class HomeController extends AppController
             // Admins and profs
             $course_list = $this->Course->getAllAccessibleCourses(User::get('id'), User::getCourseFilterPermission(), 'all', array('contain' => array('Event', 'Instructor')));
             $this->set('course_list', $this->_formatCourseList($course_list));
-            if(!User::isStudent()) {
+            if(!User::isStudentOrTutor()) {
                 return;
             }
         }

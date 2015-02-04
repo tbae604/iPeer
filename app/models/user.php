@@ -748,7 +748,9 @@ class User extends AppModel
 
         // set to true if e.g. user is an instructor/student in at least one course
         $Session->write('ipeerSession.IsInstructor', sizeof($this->getInstructorCourses($id)) > 0);
-        $Session->write('ipeerSession.IsStudent', sizeof($this->getEnrolledCourses($id)) > 0);
+        $Session->write('ipeerSession.IsStudentOrTutor', 
+                        (sizeof($this->getEnrolledCourses($id)) > 0) ||
+                        (sizeof($this->getTutorCourses($id)) > 0) );
         
         return $roles;
     }
@@ -1410,11 +1412,11 @@ class User extends AppModel
      * @access public
      * @return void
      */
-    static function isStudent()
+    static function isStudentOrTutor()
     {
         App::import('Component', 'Session');
         $Session = new SessionComponent();
-        $permission = $Session->read('ipeerSession.IsStudent');
+        $permission = $Session->read('ipeerSession.IsStudentOrTutor');
 
         if (!(isset($permission))) {
             return false;
