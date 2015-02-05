@@ -1,4 +1,5 @@
 <div class="instructorView">
+    <h1 class="title"><img src="/img/layout/icon_ipeer_logo.gif" alt="icon_ipeer_logo"> Instructor View</h1>
 <?php
 
 /*

@@ -110,7 +110,6 @@ class HomeController extends AppController
         if(!User::isInstructor()) {
             $this->render('studentIndex');
         } else {
-            $this->set('title_for_layout', __('Instructor View', true));
             $this->render('combined');
         }
     }
