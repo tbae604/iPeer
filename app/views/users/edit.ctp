@@ -97,6 +97,7 @@ jQuery('#RoleRolesUserRoleId').change(function() {
     var str = jQuery('#RoleRolesUserRoleId option:selected').text();
     if (str == 'admin' || str == 'instructor') {
         jQuery('#FacultyFaculty').removeAttr('disabled');
+        jQuery('#FacultyFaculty').addClass('enabled'); // for edit view testing
     }
     else {
         jQuery('#FacultyFaculty').attr('disabled', 'disabled');
